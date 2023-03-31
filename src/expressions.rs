@@ -8,13 +8,13 @@
 
  */
 
-use std::{rc::Rc, ops::{Add, Mul, Sub, Div}, cell::RefCell};
+use std::{rc::Rc, ops::{Add, Mul, Sub, Div}, cell::RefCell, fmt::Display};
 
 #[derive(Debug, Clone)]
 struct ValueData{
     val: f64,
     op: Option<i8>,
-    label: Option<String>,
+    label: Option<&'static str>,
     from: Option<(Value, Value)>
 }
 
@@ -24,7 +24,7 @@ pub struct Value{
 }
 
 impl Value{
-    pub fn new(val: f64, label: Option<String>) -> Self{
+    pub fn new(val: f64, label: Option<&'static str>) -> Self{
         Value{
             ptr:Rc::new(RefCell::new(ValueData { val, op: None, label, from: None }))
         }
@@ -69,17 +69,22 @@ impl Value{
 }
 
 
-impl std::fmt::Display for Value{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        todo!(); // rewrite Option<String> to use Option<&str>
-        
-        if let Some(a) = &self.ptr.borrow().from {
-            write!(f, "Value({}, children:({}, {}), label:)", self.ptr.borrow().val, a.0, a.1)
 
-        }
-        else {
-            write!(f, "Value({}, label:)", self.ptr.borrow().val)
+impl Display for Value{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let vdata = self.ptr.borrow();
+        if let Some((v1, v2)) = &vdata.from{
+            if let Some(lbl) = vdata.label {
+                write!(f, "Value({}, label='{}', children: [{}, {}])", vdata.val, lbl, v1, v2)
+            } else {
+                write!(f, "Value({}, children: [{}, {}])", vdata.val, v1, v2)
+            }
+        } else {
+            if let Some(lbl) = vdata.label {
+                write!(f, "Value({}, label='{}', children: [])", vdata.val, lbl)
+            } else {
+                write!(f, "Value({}, children: [])", vdata.val)
+            }
         }
     }
-    
 }
