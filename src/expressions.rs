@@ -109,7 +109,7 @@ impl Value{
                 Op::None => todo!(),
             }
         } else {
-            todo!()
+            return Value::new(0.0, None);
         }
     }
 
