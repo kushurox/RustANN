@@ -8,7 +8,7 @@
 
  */
 
-use std::{rc::Rc, ops::{Add, Mul, Sub, Div}, cell::RefCell, fmt::Display};
+use std::{rc::Rc, cell::RefCell, fmt::Display};
 
 #[derive(Debug, Clone, PartialEq)]
 enum Op {

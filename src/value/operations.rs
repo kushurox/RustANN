@@ -74,11 +74,60 @@ impl Add<Value> for &Value{
     }
 }
 
-impl Mul<Value> for &Value {
+impl Mul<Value> for &Value {    // for &Value * Value
     type Output = Value;
 
     fn mul(self, rhs: Value) -> Value {
         let temp = self.ptr.borrow().val * rhs.ptr.borrow().val;
         Value::new_from(temp, Op::Mul, self.clone(), rhs)
+    }
+}
+
+impl Sub<Value> for &Value{
+    type Output = Value;
+    fn sub(self, rhs: Value) -> Self::Output {
+        let temp = self.ptr.borrow().val - rhs.ptr.borrow().val;
+        Value::new_from(temp, Op::Sub, self.clone(), rhs)
+    }
+}
+
+impl Div<Value> for &Value {    // for &Value / Value
+    type Output = Value;
+
+    fn div(self, rhs: Value) -> Value {
+        let temp = self.ptr.borrow().val / rhs.ptr.borrow().val;
+        Value::new_from(temp, Op::Div, self.clone(), rhs)
+    }
+}
+
+impl Add<&Value> for Value{
+    type Output = Value;
+    fn add(self, rhs: &Value) -> Self::Output {
+        let temp = self.ptr.borrow().val + rhs.ptr.borrow().val;
+        Value::new_from(temp, Op::Add, self, rhs.clone())
+    }
+}
+
+impl Sub<&Value> for Value{
+    type Output = Value;
+    fn sub(self, rhs: &Value) -> Self::Output {
+        let temp = self.ptr.borrow().val - rhs.ptr.borrow().val;
+        Value::new_from(temp, Op::Sub, self, rhs.clone())
+    }
+}
+
+impl Mul<&Value> for Value{
+    type Output = Value;
+    fn mul(self, rhs: &Value) -> Self::Output {
+        let temp = self.ptr.borrow().val * rhs.ptr.borrow().val;
+        Value::new_from(temp, Op::Mul, self, rhs.clone())
+    }
+}
+
+impl Div<&Value> for Value{
+    type Output = Value;
+    fn div(self, rhs: &Value) -> Self::Output {
+        let temp = self.ptr.borrow().val / rhs.ptr.borrow().val;
+        Value::new_from(temp, Op::Div, self, rhs.clone())
     }
 }
