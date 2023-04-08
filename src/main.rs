@@ -7,7 +7,8 @@ fn main(){
     let x = Value::new(5.0);
     let b = Value::new(3.2);
 
-    let y = (m*&x) + b;
-    println!("{}", y.diff(&x));
+    let y = (&m*x) + b;
+    y.grad();
+    println!("{m}");
 
 }
